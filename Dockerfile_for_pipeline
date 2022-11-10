@@ -1,11 +1,11 @@
-FROM node:10-alpine as builder
+FROM node:10-alpine as bld
 WORKDIR /app
 COPY package*.json /app
 RUN npm install
 
-FROM node:10-alpine as delivery
+FROM node:10-alpine as dlv
 ENV PATH /app/node_modules/.bin:$PATH
 WORKDIR /usr/src/app
-COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=bld /app/node_modules /app/node_modules
 COPY . .
 CMD [ "node", "server.js" ]

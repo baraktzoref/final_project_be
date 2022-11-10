@@ -5,24 +5,25 @@ pipeline {
         stage('build') {
             steps {
                 sh '''
-                    echo "-----Running build stage npm install-----"
-                    DOCKER_BUILDKIT=1 docker build -f Dockerfile_for_pipeline -t elad6456/final_challenge_be_app --target builder .
+                    echo "--Running build--"
+                    echo "--with npm install--"
+                    DOCKER_BUILDKIT=1 docker build -f Dockerfile_for_pipeline -t baraktzoref/final_project_be --target bld .
                 '''
             }
         }
         stage('delivery') {
             steps {
                 sh '''
-                    echo "-----Running delivery stage-----"
-                    DOCKER_BUILDKIT=1 docker build -f Dockerfile_for_pipeline -t elad6456/final_challenge_be_app --target delivery .
+                    echo "--Running DLV--"                    
+                    DOCKER_BUILDKIT=1 docker build -f Dockerfile_for_pipeline -t baraktzoref/final_project_be --target delivery .
                 '''
             }
         }
         stage('run') {
             steps {
                 sh '''
-                    echo "-----Running the docker container-----"
-                    docker run -d elad6456/final_challenge_be_app
+                    echo "--Activate docker container--"
+                    docker run -d baraktzoref/final_project_be
                 '''
             }
         }
@@ -30,10 +31,10 @@ pipeline {
             steps {
                 sh (script:"set +x && docker login -u ${username} -p ${pass} && set -x")
                 sh '''
-                    echo "-----Pushing docker image to repo-----"
-                    docker tag elad6456/final_challenge_be_app elad6456/final_challenge_be_app:jenkins-${BUILD_NUMBER}
+                    echo "--Push docker image--"
+                    docker tag baraktzoref/final_project_be baraktzoref/final_project_be:jenkins-${BUILD_NUMBER}
                     
-                    docker push elad6456/final_challenge_be_app --all-tags
+                    docker push baraktzoref/final_project_be --all-tags
                     
                 '''
             }
